@@ -1,0 +1,81 @@
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+  }
+  
+  mat-tab-group {
+    margin-bottom: 20px;
+  }
+  
+  .button-row {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  
+  .results-container {
+    margin-top: 30px;
+  }
+  
+  .results-table {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .no-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 40px;
+    color: #666;
+  }
+  
+  .no-results mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
+  
+  .estado-pendiente {
+    color: #ff9800;
+    font-weight: 500;
+  }
+  
+  .estado-proceso {
+    color: #2196f3;
+    font-weight: 500;
+  }
+  
+  .estado-completado {
+    color: #4caf50;
+    font-weight: 500;
+  }
+  
+  .estado-cancelado {
+    color: #f44336;
+    font-weight: 500;
+  }
+  
+  .mat-mdc-row:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+  }
+
+  .card-header {
+    text-align: center; /* Centra el contenido */
+    width: -webkit-fill-available;
+    display: contents;
+  }
+  
+  .card-title {
+    font-size: 24px; /* Tamaño de la fuente del título */
+    font-weight: bold; /* Estilo en negrita para el título */
+  }
+  
+  .card-subtitle {
+    font-size: 16px; /* Tamaño de la fuente del subtítulo */
+    color: #6c757d; /* Color gris suave para el subtítulo */
+  }

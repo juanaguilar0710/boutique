@@ -1,0 +1,95 @@
+<mat-card>
+    <mat-card-header class="card-header">
+      <mat-card-title class="card-title">Lista de Pedidos</mat-card-title>
+      <mat-card-subtitle class="card-subtitle">Gestión de pedidos recibidos</mat-card-subtitle> 
+    </mat-card-header>
+  
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> No. Pedido </th>
+            <td mat-cell *matCellDef="let pedido"> {{pedido.id}} </td>
+          </ng-container>
+  
+          <!-- Cliente Column -->
+          <ng-container matColumnDef="cliente">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+            <td mat-cell *matCellDef="let pedido">
+              <div class="cliente-cell">
+                <strong>{{pedido.cliente}}</strong>
+                <div class="contacto">
+                  <small>{{pedido.email}}</small>
+                  <small>{{pedido.telefono}}</small>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+  
+          <!-- Fecha Column -->
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+            <td mat-cell *matCellDef="let pedido"> {{pedido.fecha | date:'mediumDate'}} </td>
+          </ng-container>
+  
+          <!-- Monto Column -->
+          <ng-container matColumnDef="monto">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Monto </th>
+            <td mat-cell *matCellDef="let pedido"> ₡{{pedido.monto | number}} </td>
+          </ng-container>
+  
+          <!-- Estado Column -->
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+            <td mat-cell *matCellDef="let pedido">
+              <mat-chip [color]="getEstadoColor(pedido.estado)">
+                {{pedido.estado | uppercase}}
+              </mat-chip>
+            </td>
+          </ng-container>
+  
+          <!-- Acciones Column -->
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let pedido">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Acciones">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="verDetalle(pedido)">
+                  <mat-icon>visibility</mat-icon>
+                  Ver detalle
+                </button>
+                <button mat-menu-item (click)="editarPedido(pedido)">
+                  <mat-icon>edit</mat-icon>
+                  Editar
+                </button>
+                <button mat-menu-item (click)="cambiarEstado(pedido, 'pendiente')" *ngIf="pedido.estado !== 'pendiente'">
+                  <mat-icon>pending</mat-icon>
+                  Marcar como pendiente
+                </button>
+                <button mat-menu-item (click)="cambiarEstado(pedido, 'proceso')" *ngIf="pedido.estado !== 'proceso'">
+                  <mat-icon>autorenew</mat-icon>
+                  Marcar en proceso
+                </button>
+                <button mat-menu-item (click)="cambiarEstado(pedido, 'completado')" *ngIf="pedido.estado !== 'completado'">
+                  <mat-icon>check_circle</mat-icon>
+                  Marcar completado
+                </button>
+                <button mat-menu-item (click)="cambiarEstado(pedido, 'cancelado')" *ngIf="pedido.estado !== 'cancelado'">
+                  <mat-icon>cancel</mat-icon>
+                  Cancelar pedido
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+  
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </mat-card-content>
+  </mat-card>

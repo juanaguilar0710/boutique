@@ -1,0 +1,153 @@
+<mat-card>
+
+    <mat-card-header class="card-header">
+      <mat-card-title class="card-title">Nuevo Pedido</mat-card-title>
+      <mat-card-subtitle class="card-subtitle">Completa el formulario para realizar tu pedido</mat-card-subtitle> 
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="pedidoForm" (ngSubmit)="onSubmit()">
+        <!-- Información del cliente -->
+        <h3>Información del cliente</h3>
+        <div formGroupName="informacionCliente">
+          <mat-form-field appearance="fill">
+            <mat-label>Correo Electrónico</mat-label>
+            <input matInput formControlName="email" type="email">
+            <mat-error *ngIf="pedidoForm.get('informacionCliente.email')?.hasError('required')">
+              Email requerido
+            </mat-error>
+            <mat-error *ngIf="pedidoForm.get('informacionCliente.email')?.hasError('email')">
+              Email inválido
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre y Apellidos</mat-label>
+            <input matInput formControlName="nombreCompleto">
+            <mat-error *ngIf="pedidoForm.get('informacionCliente.nombreCompleto')?.hasError('required')">
+              Nombre requerido
+            </mat-error>
+          </mat-form-field>
+  
+          <mat-form-field appearance="fill">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="telefono" type="tel">
+            <mat-error *ngIf="pedidoForm.get('informacionCliente.telefono')?.hasError('required')">
+              Teléfono requerido
+            </mat-error>
+            <mat-error *ngIf="pedidoForm.get('informacionCliente.telefono')?.hasError('pattern')">
+              8 dígitos requeridos
+            </mat-error>
+          </mat-form-field>
+        </div>
+  
+        <!-- Método de pago -->
+        <h3>Método de pago</h3>
+        <mat-radio-group formControlName="metodoPago">
+          <mat-radio-button value="sinpe">Sinpe</mat-radio-button>
+          <mat-radio-button value="transferencia">Transferencia</mat-radio-button>
+        </mat-radio-group>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Monto</mat-label>
+          <input
+            matInput
+            type="text"
+            [value]="formatearMiles(pedidoForm.get('monto')?.value)"
+            (input)="alCambiarMonto($event)"
+          >
+          <mat-error *ngIf="pedidoForm.get('monto')?.hasError('required')">
+            Monto requerido
+          </mat-error>
+          <mat-error *ngIf="pedidoForm.get('monto')?.hasError('min')">
+            Monto mínimo 1
+          </mat-error>
+        </mat-form-field>
+
+        <div class="comprobante-subida">
+          <label for="comprobantePago">Comprobante de pago (opcional):</label>
+          <input id="comprobantePago" type="file" (change)="onArchivoSeleccionado($event)" accept="image/*,.pdf">
+        </div>
+        
+        <div *ngIf="archivoNombre">
+          <p>Archivo seleccionado: <strong>{{ archivoNombre }}</strong></p>
+        </div>
+  
+        <!-- Tipo de retiro -->
+        <h3>Retiro</h3>
+        <mat-radio-group formControlName="tipoRetiro">
+          <mat-radio-button value="envio">Envío Correos CR</mat-radio-button>
+          <mat-radio-button value="tienda">Retiro en tienda</mat-radio-button>
+        </mat-radio-group>
+  
+        <!-- Datos de envío (solo si es envío) -->
+        <div *ngIf="pedidoForm.get('tipoRetiro')?.value === 'envio'">
+          <h3>Datos de envío</h3>
+          <p><em>Danos todos los detalles para que recibas tu pedido sin retrasos</em></p>
+  
+          <div formGroupName="direccionEnvio">
+            <mat-form-field appearance="fill">
+              <mat-label>Provincia</mat-label>
+              <mat-select formControlName="provincia">
+                <mat-option *ngFor="let provincia of provincias" [value]="provincia">
+                  {{provincia}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="pedidoForm.get('direccionEnvio.provincia')?.hasError('required')">
+                Provincia requerida
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="fill" *ngIf="pedidoForm.get('direccionEnvio.provincia')?.value">
+              <mat-label>Cantón</mat-label>
+              <mat-select formControlName="canton">
+                <mat-option *ngFor="let canton of cantonesDisponibles" [value]="canton">
+                  {{canton}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="pedidoForm.get('direccionEnvio.canton')?.hasError('required')">
+                Cantón requerido
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="fill" *ngIf="pedidoForm.get('direccionEnvio.canton')?.value">
+              <mat-label>Distrito</mat-label>
+              <mat-select formControlName="distrito">
+                <mat-option *ngFor="let distrito of distritosDisponibles" [value]="distrito">
+                  {{distrito}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="pedidoForm.get('direccionEnvio.distrito')?.hasError('required')">
+                Distrito requerido
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field appearance="fill">
+              <mat-label>Dirección exacta</mat-label>
+              <textarea matInput formControlName="direccionExacta" rows="3"></textarea>
+              <mat-error *ngIf="pedidoForm.get('direccionEnvio.direccionExacta')?.hasError('required')">
+                Dirección requerida
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- Botones -->
+        <div class="button-row">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!pedidoForm.valid">
+            <mat-icon>send</mat-icon> Enviar Pedido
+          </button>
+          <button mat-raised-button type="button" (click)="pedidoForm.reset({
+            metodoPago: 'sinpe',
+            tipoRetiro: 'envio'
+          })">
+            <mat-icon>clear</mat-icon> Limpiar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  
+    <mat-card-footer>
+      <p>Gracias por tu compra ❤️</p>
+    </mat-card-footer>
+  </mat-card>

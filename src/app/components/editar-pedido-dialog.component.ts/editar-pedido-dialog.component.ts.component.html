@@ -1,0 +1,18 @@
+<div *ngIf="data.id">
+<h2 mat-dialog-title>Editar Pedido #{{ data.id }}</h2>
+    <mat-dialog-content [formGroup]="form">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Número de guía</mat-label>
+        <input matInput formControlName="numeroGuia">
+      </mat-form-field>
+
+      <label>Factura (PDF)</label>
+      <input type="file" (change)="onFileSelected($event)" accept="application/pdf">
+
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancelar</button>
+      <button mat-flat-button color="primary" (click)="guardar()">Guardar</button>
+    </mat-dialog-actions>
+  </div>

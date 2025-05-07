@@ -1,0 +1,109 @@
+<mat-card>
+  <mat-card-header class="card-header">
+    <mat-card-title class="card-title">Consultar Pedido</mat-card-title>
+    <mat-card-subtitle class="card-subtitle">Busque pedidos por número o datos del cliente</mat-card-subtitle> 
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-tab-group [(selectedIndex)]="activeTab" (selectedIndexChange)="cambiarTab($event === 0 ? 'numero' : 'cliente')">
+      <mat-tab label="Por número de pedido">
+        <form [formGroup]="consultaFormNumero" class="search-form">
+          <mat-form-field appearance="fill">
+            <mat-label>Número de pedido</mat-label>
+            <input matInput formControlName="numeroPedido" placeholder="Ej: 10025">
+            <mat-icon matSuffix>local_shipping</mat-icon>
+          </mat-form-field>
+
+          <div class="button-row">
+            <button mat-raised-button color="primary" (click)="buscarPorNumero()" [disabled]="!consultaFormNumero.get('numeroPedido')?.value">
+              <mat-icon>search</mat-icon> Buscar
+            </button>
+            <button mat-raised-button (click)="limpiarBusqueda()">
+              <mat-icon>clear</mat-icon> Limpiar
+            </button>
+          </div>
+        </form>
+      </mat-tab>
+
+      <mat-tab label="Por datos del cliente">
+        <form [formGroup]="consultaFormCliente" class="search-form">
+          <mat-form-field appearance="fill">
+            <mat-label>Correo electrónico</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="Ej: cliente@example.com">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="consultaFormCliente.get('email')?.hasError('email')">
+              Ingrese un email válido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="telefono" placeholder="Ej: 88889999">
+            <mat-icon matSuffix>phone</mat-icon>
+          </mat-form-field>
+
+          <div class="button-row">
+            <button mat-raised-button color="primary" (click)="buscarPorCliente()" 
+                    [disabled]="!consultaFormCliente.get('email')?.value && !consultaFormCliente.get('telefono')?.value">
+              <mat-icon>search</mat-icon> Buscar
+            </button>
+            <button mat-raised-button (click)="limpiarBusqueda()">
+              <mat-icon>clear</mat-icon> Limpiar
+            </button>
+          </div>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- Resultados -->
+    <div class="results-container" *ngIf="pedidosEncontrados.length > 0">
+      <h3>Resultados de la búsqueda</h3>
+
+      <table mat-table [dataSource]="pedidosEncontrados" class="results-table">
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> No. Pedido </th>
+          <td mat-cell *matCellDef="let pedido"> {{pedido.id}} </td>
+        </ng-container>
+
+        <!-- Cliente Column -->
+        <ng-container matColumnDef="cliente">
+          <th mat-header-cell *matHeaderCellDef> Cliente </th>
+          <td mat-cell *matCellDef="let pedido"> {{pedido.cliente}} </td>
+        </ng-container>
+
+        <!-- Fecha Column -->
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef> Fecha </th>
+          <td mat-cell *matCellDef="let pedido"> {{pedido.fecha | date:'mediumDate'}} </td>
+        </ng-container>
+
+        <!-- Estado Column -->
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef> Estado </th>
+          <td mat-cell *matCellDef="let pedido">
+            <span [class]="'estado-' + pedido.estado">{{pedido.estado | uppercase}}</span>
+          </td>
+        </ng-container>
+
+        <!-- Acciones Column -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef> Acciones </th>
+          <td mat-cell *matCellDef="let pedido">
+            <button mat-icon-button color="primary">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+
+    <div class="no-results" *ngIf="consultaFormCliente.dirty && pedidosEncontrados.length === 0">
+      <mat-icon>info</mat-icon>
+      <p>No se encontraron pedidos con los criterios de búsqueda</p>
+    </div>
+  </mat-card-content>
+</mat-card>

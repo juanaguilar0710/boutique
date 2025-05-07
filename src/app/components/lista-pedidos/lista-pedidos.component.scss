@@ -1,0 +1,48 @@
+.table-container {
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+  }
+  
+  .cliente-cell {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .contacto {
+    display: flex;
+    gap: 10px;
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  mat-chip {
+    font-weight: 500;
+  }
+  
+  mat-paginator {
+    margin-top: 20px;
+  }
+  
+  .mat-mdc-row:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+  }
+
+  .card-header {
+    text-align: center; /* Centra el contenido */
+    width: -webkit-fill-available;
+    display: contents;
+  }
+  
+  .card-title {
+    font-size: 24px; /* Tamaño de la fuente del título */
+    font-weight: bold; /* Estilo en negrita para el título */
+  }
+  
+  .card-subtitle {
+    font-size: 16px; /* Tamaño de la fuente del subtítulo */
+    color: #6c757d; /* Color gris suave para el subtítulo */
+  }

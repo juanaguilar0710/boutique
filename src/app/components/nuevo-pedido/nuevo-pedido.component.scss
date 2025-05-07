@@ -1,0 +1,69 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  mat-card {
+    max-width: 800px;
+    margin: 20px auto;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  .button-row {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  
+  .button-row button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  mat-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  mat-card-footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2em;
+    color: #ff4081;
+  }
+  
+  h3 {
+    margin-bottom: 10px;
+    color: #3f51b5;
+  }
+  
+  p em {
+    color: #666;
+    font-size: 0.9em;
+  }
+
+  .card-header {
+    text-align: center; /* Centra el contenido */
+    width: -webkit-fill-available;
+    display: contents;
+  }
+  
+  .card-title {
+    font-size: 24px; /* Tamaño de la fuente del título */
+    font-weight: bold; /* Estilo en negrita para el título */
+  }
+  
+  .card-subtitle {
+    font-size: 16px; /* Tamaño de la fuente del subtítulo */
+    color: #6c757d; /* Color gris suave para el subtítulo */
+  }
+  
