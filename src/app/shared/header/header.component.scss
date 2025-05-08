@@ -13,3 +13,23 @@
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+  
+  .app-title {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .nav-buttons button {
+    margin-left: 8px;
+  }
+  

@@ -1,20 +1,36 @@
-<mat-toolbar color="primary">
-    <span>{{title}}</span>
-    
-    <span class="spacer"></span>
-    
-    <button mat-button routerLink="/nuevo-pedido" routerLinkActive="active-link">
-      <mat-icon>add_shopping_cart</mat-icon>
-      Nuevo Pedido
+<mat-toolbar color="primary" class="toolbar">
+  <span class="app-title">{{ title }}</span>
+
+  <span class="spacer"></span>
+
+  <!-- Botones para pantallas grandes -->
+  <div class="nav-buttons" fxHide fxShow.gt-sm>
+    <!-- <button mat-button routerLink="/nuevo-pedido" routerLinkActive="active-link">
+      <mat-icon>add_shopping_cart</mat-icon> Nuevo Pedido
     </button>
-    
     <button mat-button routerLink="/consulta" routerLinkActive="active-link">
-      <mat-icon>search</mat-icon>
-      Consultar Pedido
+      <mat-icon>search</mat-icon> Consultar Pedido
+    </button> -->
+    <button mat-button>
+      Menú
     </button>
-    
-    <button mat-button routerLink="/lista-pedidos" routerLinkActive="active-link">
-      <mat-icon>list</mat-icon>
-      Lista de Pedidos
+  </div>
+
+  <!-- Botón menú para pantallas pequeñas -->
+  <div fxShow fxHide.gt-sm>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
     </button>
-  </mat-toolbar>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/nuevo-pedido" routerLinkActive="active-link">
+        <mat-icon>add_shopping_cart</mat-icon> Nuevo Pedido
+      </button>
+      <button mat-menu-item routerLink="/consulta" routerLinkActive="active-link">
+        <mat-icon>search</mat-icon> Consultar Pedido
+      </button>
+      <button mat-menu-item routerLink="/lista-pedidos" routerLinkActive="active-link">
+        <mat-icon>list</mat-icon> Lista de Pedidos
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

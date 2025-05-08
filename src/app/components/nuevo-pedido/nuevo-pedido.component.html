@@ -40,6 +40,27 @@
             </mat-error>
           </mat-form-field>
         </div>
+
+        <!-- info producto -->
+        <mat-form-field appearance="fill">
+          <mat-label>Producto</mat-label>
+          <input matInput formControlName="producto" required>
+          <mat-error *ngIf="pedidoForm.get('producto')?.hasError('required')">
+            Producto es requerido
+          </mat-error>
+        </mat-form-field>
+        
+        <!-- Campo Cantidad -->
+        <mat-form-field appearance="fill">
+          <mat-label>Cantidad</mat-label>
+          <input matInput type="number" formControlName="cantidad" min="1" required>
+          <mat-error *ngIf="pedidoForm.get('cantidad')?.hasError('required')">
+            Cantidad es requerida
+          </mat-error>
+          <mat-error *ngIf="pedidoForm.get('cantidad')?.hasError('min')">
+            Mínimo 1 unidad
+          </mat-error>
+        </mat-form-field>
   
         <!-- Método de pago -->
         <h3>Método de pago</h3>
@@ -64,14 +85,16 @@
           </mat-error>
         </mat-form-field>
 
-        <div class="comprobante-subida">
-          <label for="comprobantePago">Comprobante de pago (opcional):</label>
-          <input id="comprobantePago" type="file" (change)="onArchivoSeleccionado($event)" accept="image/*,.pdf">
-        </div>
-        
-        <div *ngIf="archivoNombre">
-          <p>Archivo seleccionado: <strong>{{ archivoNombre }}</strong></p>
-        </div>
+        <div class="file-upload-section">
+          <input type="file" id="comprobante" 
+                 (change)="onArchivoSeleccionado($event)"
+                 accept=".pdf,.jpg,.jpeg,.png" hidden>
+          <label for="comprobante" mat-raised-button>
+            <mat-icon>attach_file</mat-icon>
+            {{ archivoNombre || 'Adjuntar comprobante' }}
+          </label>
+          <small *ngIf="archivoNombre">({{ archivoComprobante?.size | fileSize }})</small>
+        </div>    
   
         <!-- Tipo de retiro -->
         <h3>Retiro</h3>
@@ -134,14 +157,13 @@
   
         <!-- Botones -->
         <div class="button-row">
-          <button mat-raised-button color="primary" type="submit" [disabled]="!pedidoForm.valid">
-            <mat-icon>send</mat-icon> Enviar Pedido
+          <button mat-raised-button color="primary" type="submit" [disabled]="pedidoForm.invalid || enviando">
+            <mat-icon>send</mat-icon>
+            {{ enviando ? 'Enviando...' : 'Enviar Pedido' }}
           </button>
-          <button mat-raised-button type="button" (click)="pedidoForm.reset({
-            metodoPago: 'sinpe',
-            tipoRetiro: 'envio'
-          })">
-            <mat-icon>clear</mat-icon> Limpiar
+          <button mat-raised-button type="button" (click)="resetFormulario()" [disabled]="enviando">
+            <mat-icon>clear</mat-icon>
+            Limpiar
           </button>
         </div>
       </form>
@@ -151,3 +173,35 @@
       <p>Gracias por tu compra ❤️</p>
     </mat-card-footer>
   </mat-card>
+
+  <!-- Sección de confirmación (visible solo después de crear) -->
+<ng-container *ngIf="codigoSeguimiento">
+  <mat-card class="confirmation-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>check_circle</mat-icon>
+      <mat-card-title>Pedido Registrado Exitosamente</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="code-section">
+        <p class="label">Tu código de seguimiento:</p>
+        <div class="code-container">
+          <span class="code">{{ codigoSeguimiento }}</span>
+          <button mat-icon-button (click)="copiarCodigo()" matTooltip="Copiar código">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="actions">
+        <a mat-raised-button color="primary" [routerLink]="['/rastrear', codigoSeguimiento]">
+          <mat-icon>search</mat-icon>
+          RASTREAR ESTE PEDIDO
+        </a>
+        <button mat-stroked-button (click)="reset()">
+          <mat-icon>add</mat-icon>
+          CREAR OTRO PEDIDO
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

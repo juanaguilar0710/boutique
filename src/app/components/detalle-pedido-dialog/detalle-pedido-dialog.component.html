@@ -1,0 +1,90 @@
+<div class="dialog-container">
+    <h2 mat-dialog-title>Detalles del Pedido #{{pedido?.id}}</h2>
+    
+    <mat-dialog-content>
+      <div *ngIf="isLoading" class="loading-spinner">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+  
+      <div *ngIf="!isLoading">
+        <!-- Información del pedido -->
+        <div class="pedido-info">
+          <div class="info-row">
+            <span class="info-label">Cliente:</span>
+            <span class="info-value">{{pedido?.cliente}}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Estado:</span>
+            <span class="info-value estado-badge" [class]="'estado-' + pedido?.estado?.toLowerCase()">
+              {{pedido?.estado}}
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Fecha:</span>
+            <span class="info-value">{{pedido?.fechaCreacion | date:'medium'}}</span>
+          </div>
+          <!-- Más campos según necesites -->
+        </div>
+  
+        <!-- Documentos asociados -->
+        <div class="documentos-section" *ngIf="documentos?.length && documentos.length > 0">
+          <h3>Documentos adjuntos</h3>
+          
+          
+
+          <div class="documentos-grid">
+            <mat-card *ngFor="let doc of documentos" class="documento-card"
+              [ngClass]="{
+                'card-comprobante': doc.tipoDocumento === 'COMPROBANTE',
+                'card-factura': doc.tipoDocumento === 'FACTURA',
+                'card-otro': doc.tipoDocumento === 'OTRO'
+              }">
+              
+              <mat-card-header>
+                <mat-icon mat-card-avatar class="doc-icon">description</mat-icon>
+                <mat-card-title class="doc-nombre">{{ doc.nombreArchivo }}</mat-card-title>
+                <mat-card-subtitle>
+                  <span class="badge"
+                    [ngClass]="{
+                      'badge-comprobante': doc.tipoDocumento === 'COMPROBANTE',
+                      'badge-factura': doc.tipoDocumento === 'FACTURA',
+                      'badge-otro': doc.tipoDocumento === 'OTRO'
+                    }">
+                    {{ doc.tipoDocumento }}
+                  </span>
+                </mat-card-subtitle>
+              </mat-card-header>
+          
+              <mat-card-content>
+                <p class="fecha">
+                  Fecha de carga: {{ doc.fechaCreacion | date:'mediumDate' }}
+                </p>
+              </mat-card-content>
+          
+              <mat-card-actions align="end">
+                <button class="btn-descargar" mat-stroked-button color="primary" (click)="descargarDocumento(doc)">
+                  Descargar <mat-icon>cloud_download</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+          
+
+
+
+
+
+
+        </div>
+  
+        <div *ngIf="documentos?.length === 0" class="no-documents">
+          <mat-icon>info</mat-icon>
+          <p>No hay documentos asociados a este pedido</p>
+        </div>
+      </div>
+    </mat-dialog-content>
+  
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="cerrar()">Cerrar</button>
+    </mat-dialog-actions>
+  </div>

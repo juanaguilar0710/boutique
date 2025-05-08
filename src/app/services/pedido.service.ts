@@ -1,70 +1,93 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { Pedido } from '../models/pedido.model';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { catchError, Observable, of, retry, throwError } from 'rxjs';
+import { DocumentoPedido, Pedido } from '../models/pedido.model';
+import { environment } from '../../enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidoService {
-  private apiUrl = 'https://tu-api.com/pedidos';
+  
+  private readonly baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  buscarPorNumero(numeroPedido: string): Observable<Pedido[]> {
-    // En una aplicación real, harías una llamada HTTP
-    // return this.http.get<Pedido[]>(`${this.apiUrl}?numero=${numeroPedido}`);
-    
-    // Ejemplo con datos mock
-    const mockPedidos: Pedido[] = [
-      {
-        id: parseInt(numeroPedido),
-        cliente: 'Cliente Ejemplo',
-        email: 'cliente@example.com',
-        telefono: '88889999',
-        fecha: new Date(),
-        estado: 'pendiente',
-        metodoPago: 'Sinpe',
-        monto: 25000,
-        tipoRetiro: 'Retiro en tienda'
-      }
-    ];
-    return of(mockPedidos.filter(p => p.id === parseInt(numeroPedido)));
+  crearPedido(pedido: any): Observable<any> {  
+    return this.http.post(this.baseUrl + environment.Pedidos, pedido);
+  }
+
+  obtenerPedidos() {
+    return this.http.get(this.baseUrl + environment.Pedidos);
+  }
+
+  buscarPorCodigoSeguimiento(codigo: string): Observable<any> {
+    return this.http.get(this.baseUrl + environment.Pedidos + '/' + environment.porcodigo + codigo);  
+  }
+
+  buscarPorNumeroGuia(guia: string): Observable<any> {
+    return this.http.get(this.baseUrl + environment.Pedidos + '/' + environment.porguia + guia);  
   }
 
   buscarPorCliente(email: string, telefono: string): Observable<Pedido[]> {
-    // En una aplicación real:
-    // return this.http.get<Pedido[]>(`${this.apiUrl}?email=${email}&telefono=${telefono}`);
+    // Construir parámetros de consulta
+    let params = new HttpParams();
     
-    // Ejemplo con datos mock
-    const mockPedidos: Pedido[] = [
-      {
-        id: 1001,
-        cliente: 'Cliente Ejemplo',
-        email: email,
-        telefono: telefono,
-        fecha: new Date('2025-05-01'),
-        estado: 'completado',
-        metodoPago: 'Sinpe',
-        monto: 25000,
-        tipoRetiro: 'Retiro en tienda'
-      },
-      {
-        id: 1002,
-        cliente: 'Cliente Ejemplo',
-        email: email,
-        telefono: telefono,
-        fecha: new Date('2025-05-10'),
-        estado: 'proceso',
-        metodoPago: 'Transferencia',
-        monto: 35000,
-        tipoRetiro: 'Envío Correos CR'
-      }
-    ];
+    if (email) {
+      params = params.append('email', email);
+    }
     
-    return of(mockPedidos.filter(p => 
-      (email && p.email.includes(email)) || 
-      (telefono && p.telefono.includes(telefono)))
+    if (telefono) {
+      params = params.append('telefono', telefono);
+    }
+  
+    return this.http.get<Pedido[]>(this.baseUrl + environment.Pedidos +'/'+ environment.porcliente, { params }).pipe(
+      catchError(error => {
+        console.error('Error buscando pedidos por cliente:', error);
+        return of([]); // Devuelve array vacío en caso de error
+      })
     );
   }
+
+  obtenerPedidoConDocumentos(pedidoId: number): Observable<{ pedido: Pedido, documentos: DocumentoPedido[] }> {
+    return this.http.get<{ pedido: Pedido, documentos: DocumentoPedido[] }>(this.baseUrl + ''+ environment.Pedidos +'/' +pedidoId + '/' + environment.condocumentos,{ 
+      headers: new HttpHeaders({
+        'Accept': 'application/json',
+        'Cache-Control': 'no-cache'
+      }),
+      responseType: 'json'
+    }).pipe(
+      retry(1), // Reintentar una vez
+      catchError(this.handleError)
+    );
+  }
+  
+  private handleError(error: any) {
+    console.error('Error en la solicitud:', error);
+    return throwError(() => new Error(
+      error.error?.message || error.message || 'Error en el servidor'
+    ));
+  }
+  
+  // Métodos para Documentos
+  subirComprobante(pedidoId: number, archivo: File) {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    return this.http.post(this.baseUrl + environment.documentos +'/' + environment.subircomprobante +'/'+ pedidoId, formData);
+  }
+
+  descargarDocumento(documentoId: number) {
+    return this.http.get(this.baseUrl + environment.documentos +'/'+ environment.descargar + '/' + documentoId, {
+      responseType: 'blob'
+    });
+  }
+
+  actualizarGuia(pedidoId: number, numeroGuia: string) {
+    return this.http.put(this.baseUrl + environment.documentos +'/'+ environment.actualizarguia + '/' + pedidoId, { numeroGuia });
+  }
+
+  actualizarFactura(pedidoId: number, numeroFactura: string) {
+    return this.http.put(this.baseUrl + environment.documentos + '/' + environment.actualizarfactura +'/' + pedidoId, { numeroFactura });
+  }
+  
 }
