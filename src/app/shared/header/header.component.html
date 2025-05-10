@@ -3,20 +3,13 @@
 
   <span class="spacer"></span>
 
-  <!-- Botones para pantallas grandes -->
-  <div class="nav-buttons" fxHide fxShow.gt-sm>
-    <!-- <button mat-button routerLink="/nuevo-pedido" routerLinkActive="active-link">
-      <mat-icon>add_shopping_cart</mat-icon> Nuevo Pedido
-    </button>
-    <button mat-button routerLink="/consulta" routerLinkActive="active-link">
-      <mat-icon>search</mat-icon> Consultar Pedido
-    </button> -->
-    <button mat-button>
-      Menú
+
+  <div class="nav-buttons" fxHide fxShow.gt-sm *ngIf="(isAuthenticated$ | async) === false">
+    <button mat-button routerLink="/login" routerLinkActive="active-link">
+      <mat-icon>login</mat-icon> Iniciar Sesión
     </button>
   </div>
 
-  <!-- Botón menú para pantallas pequeñas -->
   <div fxShow fxHide.gt-sm>
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>menu</mat-icon>
@@ -28,9 +21,13 @@
       <button mat-menu-item routerLink="/consulta" routerLinkActive="active-link">
         <mat-icon>search</mat-icon> Consultar Pedido
       </button>
-      <button mat-menu-item routerLink="/lista-pedidos" routerLinkActive="active-link">
+      <button mat-menu-item routerLink="/lista-pedidos" *ngIf="isAuthenticated$ | async" routerLinkActive="active-link">
         <mat-icon>list</mat-icon> Lista de Pedidos
+      </button>
+      <button mat-menu-item (click)="logout()" *ngIf="(isAuthenticated$ | async) === true">
+        <mat-icon>exit_to_app</mat-icon> Cerrar Sesión
       </button>
     </mat-menu>
   </div>
+
 </mat-toolbar>

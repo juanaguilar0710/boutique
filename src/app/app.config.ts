@@ -1,13 +1,16 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { JwtInterceptor } from '../app/shared/interceptors/JwtInterceptor'; // Ajusta la ruta
 
 export const appConfig: ApplicationConfig = {
-  providers:[
+  providers: [
     provideRouter(routes),
-    provideHttpClient(),
-    provideZoneChangeDetection({ eventCoalescing: true })
+    provideHttpClient(
+      withInterceptors([])
+    ),
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ]
 };
