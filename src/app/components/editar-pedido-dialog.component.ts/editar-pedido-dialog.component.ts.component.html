@@ -1,18 +1,258 @@
 <div *ngIf="data.id">
-<h2 mat-dialog-title>Editar Pedido #{{ data.id }}</h2>
-    <mat-dialog-content [formGroup]="form">
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Número de guía</mat-label>
-        <input matInput formControlName="numeroGuia">
-      </mat-form-field>
+  <h2 mat-dialog-title>Editar Pedido #{{ data.id }}</h2>
+  
+  <mat-dialog-content [formGroup]="form">
+    <div class="form-container">
+      <!-- Información del cliente -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>Información del cliente</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Cliente</mat-label>
+              <input matInput formControlName="cliente" required>
+              <mat-error *ngIf="form.get('cliente')?.hasError('required')">Requerido</mat-error>
+            </mat-form-field>
+          </div>
 
-      <label>Factura (PDF)</label>
-      <input type="file" (change)="onFileSelected($event)" accept="application/pdf">
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" required>
+              <mat-error *ngIf="form.get('email')?.errors">Ingrese un email válido</mat-error>
+            </mat-form-field>
+          </div>
 
-    </mat-dialog-content>
-    
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancelar</button>
-      <button mat-flat-button color="primary" (click)="guardar()">Guardar</button>
-    </mat-dialog-actions>
-  </div>
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Teléfono</mat-label>
+              <input matInput formControlName="telefono" required>
+              <mat-error *ngIf="form.get('telefono')?.errors">Teléfono inválido</mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Detalles del pedido -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>Detalles del pedido</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Producto</mat-label>
+              <input matInput formControlName="producto" required>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-half">
+              <mat-label>Cantidad</mat-label>
+              <input matInput formControlName="cantidad" type="number" min="1" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-half">
+              <mat-label>Monto</mat-label>
+              <input matInput formControlName="monto" type="number" min="0" required>
+              <span matTextPrefix>₡&nbsp;</span>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-half">
+              <mat-label>Método de pago</mat-label>
+              <mat-select formControlName="metodoPago" required>
+                <mat-option *ngFor="let metodo of metodosPago" [value]="metodo">
+                  {{ metodo | titlecase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-half">
+              <mat-label>Estado</mat-label>
+              <mat-select formControlName="estado" required>
+                <mat-option *ngFor="let estado of estadosPedido" [value]="estado">
+                  {{ estado }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Fecha de creación</mat-label>
+              <input matInput [value]="form.get('fechaCreacion')?.value | date:'medium'" disabled>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de envío -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>Información de envío</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Tipo de retiro</mat-label>
+              <mat-select formControlName="tipoRetiro" required>
+                <mat-option *ngFor="let tipo of tiposRetiro" [value]="tipo">
+                  {{ tipo === 'envio' ? 'Envío a domicilio' : 'Recoger en tienda' }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-third">
+              <mat-label>Provincia</mat-label>
+              <mat-select formControlName="provincia" required>
+                <mat-option *ngFor="let provincia of provincias" [value]="provincia">
+                  {{ provincia }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-third">
+              <mat-label>Cantón</mat-label>
+              <mat-select formControlName="canton" required>
+                <mat-option *ngFor="let canton of cantonesActuales" [value]="canton">
+                  {{ canton }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-third">
+              <mat-label>Distrito</mat-label>
+              <mat-select formControlName="distrito" required>
+                <mat-option *ngFor="let distrito of distritosActuales" [value]="distrito">
+                  {{ distrito }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Dirección exacta</mat-label>
+              <textarea matInput formControlName="direccionExacta" rows="2" required></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Notas adicionales</mat-label>
+              <textarea matInput formControlName="notas" rows="2"></textarea>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información de seguimiento -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>Seguimiento y documentación</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>                 
+
+            <div class="documentos-container">
+              <h3 class="documentos-title">Documentos cargados</h3>
+              
+              <mat-list class="documentos-list">
+                <mat-list-item *ngFor="let doc of documentosCargados" class="documento-item">
+                  <div class="documento-content">
+                    <div class="documento-icon" [ngClass]="getDocumentoColorClass(doc.tipoDocumento)">
+                      <mat-icon>insert_drive_file</mat-icon>
+                    </div>
+                    
+                    <div class="documento-info-wrapper">
+                      <div class="documento-info">
+                        <div class="documento-nombre">
+                          {{ (doc.nombreArchivo.length > 30) ? (doc.nombreArchivo | slice:0:30) + '...' : doc.nombreArchivo }}
+                        </div>
+                        <div class="documento-detalles">
+                          <span class="documento-tipo" [ngClass]="getDocumentoColorClass(doc.tipoDocumento)">
+                            {{ doc.tipoDocumento }}
+                          </span>
+                          <span class="documento-separador">•</span>
+                          <span class="documento-tamano">{{ doc.tamano | fileSize }}</span>
+                          <span class="documento-separador">•</span>
+                          <span class="documento-fecha">{{ doc.fechaFormateada }}</span>
+                        </div>
+                      </div>
+                      
+                      <button mat-icon-button class="documento-accion" matTooltip="Descargar" (click)="descargarDocumento(doc)">
+                        <mat-icon>cloud_download</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </mat-list-item>
+              </mat-list>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-half">
+              <mat-label>Código de seguimiento</mat-label>
+              <input  matInput formControlName="codigoSeguimiento">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-half">
+              <mat-label>Número de guía</mat-label>
+              <input matInput formControlName="numeroGuia">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="w-half">
+              <mat-label>Número de factura</mat-label>
+              <input matInput formControlName="numeroFactura">
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <label>Factura</label>
+            <div class="file-upload-container">
+              <button mat-raised-button type="button" (click)="facturaInput.click()">
+                <mat-icon>attach_file</mat-icon> Seleccionar factura
+              </button>
+              <input #facturaInput type="file" (change)="onFileSelected($event, 'factura')" accept=".pdf,.jpg,.jpeg,.png" hidden>
+              <span class="file-name">{{ form.get('factura')?.value || 'Ningún archivo seleccionado' }}</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Documentos adicionales</label>
+            <div class="file-upload-container">
+              <button mat-raised-button type="button" (click)="documentoInput.click()">
+                <mat-icon>attach_file</mat-icon> Seleccionar documentos
+              </button>
+              <input #documentoInput type="file" multiple (change)="onFileSelected($event, 'documentos')" accept="application/pdf,image/*" hidden>
+              <span class="file-name">{{ form.get('documentos')?.value || 'Ningún archivo seleccionado' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="guardar()" [disabled]="form.invalid">
+      Guardar cambios
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
+    //apiUrl: 'http://161.97.160.167:3215/api/', // Ajusta el puerto según tu backend .NET
     apiUrl: 'https://localhost:7140/api/', // Ajusta el puerto según tu backend .NET
     // Configuraciones adicionales
     maxFileSize: 20971520, // 20MB

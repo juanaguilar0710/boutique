@@ -17,7 +17,7 @@ export class PedidoService {
     return this.http.post(this.baseUrl + environment.Pedidos, pedido);
   }
 
-  obtenerPedidos() {
+  obtenerPedidos(): Observable<any> {
     return this.http.get(this.baseUrl + environment.Pedidos);
   }
 
@@ -61,6 +61,10 @@ export class PedidoService {
       catchError(this.handleError)
     );
   }
+
+  actualizarPedido(pedidoId: number, pedido: Pedido): Observable<any> {
+    return this.http.put(this.baseUrl + environment.Pedidos + '/' + pedidoId, pedido);
+  }
   
   private handleError(error: any) {
     console.error('Error en la solicitud:', error);
@@ -70,10 +74,10 @@ export class PedidoService {
   }
   
   // Métodos para Documentos
-  subirComprobante(pedidoId: number, archivo: File) {
+  subirComprobante(pedidoId: number, archivo: File, tipo:string) {
     const formData = new FormData();
     formData.append('archivo', archivo);
-    return this.http.post(this.baseUrl + environment.documentos +'/' + environment.subircomprobante +'/'+ pedidoId, formData);
+    return this.http.post(this.baseUrl + environment.documentos +'/' + environment.subircomprobante +'/'+ pedidoId+'/'+tipo, formData);
   }
 
   descargarDocumento(documentoId: number) {

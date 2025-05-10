@@ -220,7 +220,8 @@ export class NuevoPedidoComponent {
       if (this.archivoComprobante) {
         await this.apiService.subirComprobante(
           pedidoResponse.pedido.id, 
-          this.archivoComprobante
+          this.archivoComprobante,
+          "COMPROBANTE"
         ).toPromise();
       }
 

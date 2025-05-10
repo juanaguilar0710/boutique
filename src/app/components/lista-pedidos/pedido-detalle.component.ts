@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import '@angular/common/locales/global/es';
 
 @Component({
   selector: 'app-pedido-detalle',
@@ -20,6 +21,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatIconModule,
     MatChipsModule
   ],
+  providers: [{ provide: LOCALE_ID, useValue: 'es' }],
   template: `
     <h2 mat-dialog-title>Detalle del Pedido #{{data.id}}</h2>
     <mat-dialog-content>
@@ -36,7 +38,7 @@ import { MatChipsModule } from '@angular/material/chips';
         <mat-list-item>
           <mat-icon matListItemIcon>date_range</mat-icon>
           <div matListItemTitle>Fecha</div>
-          <div matListItemLine>{{data.fecha | date:'fullDate'}}</div>
+          <div matListItemLine>{{data.fechaCreacion | date:'fullDate'}}</div>
         </mat-list-item>
 
         <mat-divider></mat-divider>
