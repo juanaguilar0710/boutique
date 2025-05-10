@@ -18,10 +18,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.authService.getToken();
-
-    console.log('Token:', token);
-    
-    
+    // Si el token existe, lo añade al encabezado de autorización
     if (token) {
       request = request.clone({
         setHeaders: {
