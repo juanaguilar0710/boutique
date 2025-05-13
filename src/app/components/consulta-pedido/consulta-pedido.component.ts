@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +16,7 @@ import { Pedido } from '../../models/pedido.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetallePedidoDialogComponent } from '../detalle-pedido-dialog/detalle-pedido-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-consultar-pedido',
@@ -37,7 +38,7 @@ import { MatDialog } from '@angular/material/dialog';
   templateUrl: './consulta-pedido.component.html',
   styleUrls: ['./consulta-pedido.component.scss']
 })
-export class ConsultarPedidoComponent {
+export class ConsultarPedidoComponent implements OnInit {
   // Formularios
   consultaFormCodigo!: FormGroup;
   consultaFormGuia!: FormGroup;
@@ -60,9 +61,17 @@ export class ConsultarPedidoComponent {
     private fb: FormBuilder,
     private pedidoService: PedidoService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute
   ) {
     this.inicializarFormularios();
+  }
+  ngOnInit(): void {
+    const codigo = this.route.snapshot.paramMap.get('codigo');
+    if(codigo) {
+      this.consultaFormCodigo.patchValue({ codigoSeguimiento: codigo });
+      this.buscarPorCodigo();
+    }
   }
 
   // Inicialización de formularios

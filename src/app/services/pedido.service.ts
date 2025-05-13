@@ -65,6 +65,10 @@ export class PedidoService {
   actualizarPedido(pedidoId: number, pedido: Pedido): Observable<any> {
     return this.http.put(this.baseUrl + environment.Pedidos + '/' + pedidoId, pedido);
   }
+
+  actualizarEstadoPedido(id: number, estado: string): Observable<void> {
+    return this.http.put<void>(this.baseUrl + environment.Pedidos + '/'+ id + '/' + environment.Estado, { estado });
+  }
   
   private handleError(error: any) {
     console.error('Error en la solicitud:', error);

@@ -10,6 +10,7 @@ export const routes: Routes = [  // <-- Nota el 'export const routes'
   { path: 'login', component: LoginComponent },
   { path: 'nuevo-pedido', component: NuevoPedidoComponent },
   { path: 'consulta', component: ConsultarPedidoComponent },
+  { path: 'consulta/:codigo', component: ConsultarPedidoComponent },
   { path: 'lista-pedidos', component: ListaPedidosComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'nuevo-pedido' }
 ];

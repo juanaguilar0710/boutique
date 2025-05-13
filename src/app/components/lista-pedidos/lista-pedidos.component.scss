@@ -46,3 +46,79 @@
     font-size: 16px; /* Tamaño de la fuente del subtítulo */
     color: #6c757d; /* Color gris suave para el subtítulo */
   }
+
+// Estilos para la tabla de pedidos
+
+ mat-chip[class^="estado-"] {
+  border-radius: 16px;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 0 12px;
+  height: 28px;
+  line-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: white !important;
+  border: none;
+}
+
+/* Estilos por estado */
+.estado-pendiente {
+  background-color: #ffb84dde !important;
+  color: #fff !important;
+}
+
+.estado-proceso {
+  background-color: #0097fbd5 !important;
+  color: #fff !important;
+}
+
+.estado-completado {
+  background-color: #66BB6A !important;
+  color: #fff !important;
+}
+
+.estado-cancelado {
+  background-color: #EF5350 !important;
+  color: #fff !important;
+}
+
+.estado-resumen {
+  display: flex;
+  gap: 20px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+  justify-content: start;
+
+  .estado-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #fff;
+
+    &.pendiente {
+      background-color: #FFB74D;
+    }
+
+    &.proceso {
+      background-color: #FB8C00;
+    }
+
+    &.completado {
+      background-color: #66BB6A;
+    }
+
+    &.cancelado {
+      background-color: #EF5350;
+    }
+
+    mat-icon {
+      font-size: 18px;
+    }
+  }
+}

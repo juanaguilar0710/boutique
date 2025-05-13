@@ -208,10 +208,10 @@ export class NuevoPedidoComponent {
         monto: formValue.monto,
         metodoPago: formValue.metodoPago,
         tipoRetiro: formValue.tipoRetiro,
-        provincia: formValue.direccionEnvio?.provincia || null,
-        canton: formValue.direccionEnvio?.canton || null,
-        distrito: formValue.direccionEnvio?.distrito || null,
-        direccionExacta: formValue.direccionEnvio?.direccionExacta || null,
+        provincia: formValue.direccionEnvio?.provincia || "",
+        canton: formValue.direccionEnvio?.canton || "",
+        distrito: formValue.direccionEnvio?.distrito || "",
+        direccionExacta: formValue.direccionEnvio?.direccionExacta || "",
         notas: formValue.notas || '',
         CodigoSeguimiento: '000000'
       }).toPromise();

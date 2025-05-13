@@ -24,6 +24,7 @@ export class LoginComponent {
 
   errorMessage: string | null = null;
   loginForm: any;
+  loading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,15 +38,18 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    this.loading = true;
     if (this.loginForm.valid) {
       const { username, password } = this.loginForm.value;
       this.authService.login(username, password).subscribe({
         next: () => {
           const returnUrl = this.router.parseUrl(this.router.url).queryParams['returnUrl'] || '/lista-pedidos';
+          this.loading = false;
           this.router.navigateByUrl(returnUrl);
         },
         error: (error) => {
           this.errorMessage = 'Usuario o contraseña incorrectos';
+          this.loading = false;
         }
       });
     }

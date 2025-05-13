@@ -110,7 +110,7 @@
           <div class="row">
             <mat-form-field appearance="outline" class="w-third">
               <mat-label>Provincia</mat-label>
-              <mat-select formControlName="provincia" required>
+              <mat-select formControlName="provincia">
                 <mat-option *ngFor="let provincia of provincias" [value]="provincia">
                   {{ provincia }}
                 </mat-option>
@@ -119,7 +119,7 @@
 
             <mat-form-field appearance="outline" class="w-third">
               <mat-label>Cantón</mat-label>
-              <mat-select formControlName="canton" required>
+              <mat-select formControlName="canton">
                 <mat-option *ngFor="let canton of cantonesActuales" [value]="canton">
                   {{ canton }}
                 </mat-option>
@@ -128,7 +128,7 @@
 
             <mat-form-field appearance="outline" class="w-third">
               <mat-label>Distrito</mat-label>
-              <mat-select formControlName="distrito" required>
+              <mat-select formControlName="distrito">
                 <mat-option *ngFor="let distrito of distritosActuales" [value]="distrito">
                   {{ distrito }}
                 </mat-option>
@@ -139,7 +139,7 @@
           <div class="row">
             <mat-form-field appearance="outline" class="w-full">
               <mat-label>Dirección exacta</mat-label>
-              <textarea matInput formControlName="direccionExacta" rows="2" required></textarea>
+              <textarea matInput formControlName="direccionExacta" rows="2"></textarea>
             </mat-form-field>
           </div>
 
